@@ -45,12 +45,12 @@ void new_game() {
         flashled(pin);
         playtone(pin);
     }
-    delay(1000);
+    
     for (int i=0;i<MAX_PATTERN;i++){
+        delay(PATTERN_DELAY);
         PATTERN[i] = random(4);
         flashled(PATTERN[i]);
         playtone(PATTERN[i]);
-        delay(PATTERN_DELAY);
     }
  
 }
