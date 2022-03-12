@@ -1,81 +1,110 @@
 #include "rbd-simon-says-shield.h"
 
-#define MAX_PATTERN 4
+#define MAX_PATTERN 100
 
-uint8_t PATTERN[MAX_PATTERN] = {0};
-uint8_t PATTERN_LENGTH = MAX_PATTERN;
-uint16_t PATTERN_DELAY = 1000;
-
+uint8_t pattern[MAX_PATTERN] = {0};
+uint8_t pattern_length = 4;
 uint8_t pattern_loc = 0;
-
-void lose(uint8_t correct_led){
-    tone(12,NOTE_D2 ,100);
-    flashled(correct_led,100);
-    delay(100);
-    tone(12,NOTE_CS2,100);
-    flashled(correct_led,100);
-    delay(100);
-    tone(12,NOTE_B1 ,500);
-    flashled(correct_led,100);
-    delay(200);
-    flashallled(1000);
-    delay(1000);
-    new_game();
-}
-
-void win(){
-    tone(12,NOTE_D5 ,200);
-    flashallled(200);
-    delay(100);
-    tone(12,NOTE_D5,200);
-    flashallled(200);
-    tone(12,NOTE_D5 ,200);
-    flashallled(200);
-    tone(12,NOTE_A5 ,300);
-    delay(1000);
-    new_game();
-}
+uint16_t pattern_delay = 500;
 
 void new_game() {
-    pattern_loc = 0;
-    randomSeed(analogRead( A5 ));
-    for (int pin=0;pin<4;pin++){
-        pinMode(SWITCH_PINS[pin], INPUT_PULLUP);
-        pinMode(LED_PINS[pin], OUTPUT);
-        flashled(pin);
-        playtone(pin);
-    }
-    
-    for (int i=0;i<MAX_PATTERN;i++){
-        delay(PATTERN_DELAY);
-        PATTERN[i] = random(4);
-        flashled(PATTERN[i]);
-        playtone(PATTERN[i]);
-    }
- 
-}
-void setup () {
-    Serial.begin(9600);
-    new_game();
+
+  pattern_length = 1;
+  pattern_loc = 0;
+  pattern_delay = 500;
+
+  pattern[0] = random(4);
+
+  show_pattern();
 }
 
+void show_pattern() {
+  for (int i = 0; i < pattern_length; i++) {
+    delay(pattern_delay);
+    flashled(pattern[i]);
+    playtone(pattern[i]);
+  }
+}
+
+void setup () {
+  Serial.begin(9600);
+
+  // Setup the buttons and LEDs on the arduino
+  for (int pin = 0; pin < pattern_length; pin++) {
+    pinMode(SWITCH_PINS[pin], INPUT_PULLUP);
+    pinMode(LED_PINS[pin], OUTPUT);
+  }
+
+  // Need to use an unassigned analog input
+  randomSeed(analogRead( A5 ));
+
+  new_game();
+}
+
+/*
+ * Main program loop. Do what's in here forever
+ */
 void loop () {
-    for (int pin=0;pin<4;pin++){
-        int swval = digitalRead(SWITCH_PINS[pin]);
-        if ( swval == LOW && debounce(pin,true) ){           
-            digitalWrite(LED_PINS[pin], HIGH);
-            playtone(pin);
-            if ( pattern_loc == MAX_PATTERN-1 && pin == PATTERN[pattern_loc] ){
-                win();
-            }
-            else if ( pattern_loc < MAX_PATTERN && pin != PATTERN[pattern_loc] ) {
-                lose(PATTERN[pattern_loc]);
-            }
-            else if ( pattern_loc < MAX_PATTERN ) {
-                pattern_loc++;
-            }
-        } else if ( debounce(pin,false) ) {
-            digitalWrite(LED_PINS[pin], LOW);
-        }
+
+  // Check the condition of all 4 buttons
+  for (int pin = 0; pin < 4; pin++) {
+    int swval = digitalRead(SWITCH_PINS[pin]);
+
+    /*
+       If a button is pressed down (but not released yet)
+          Light it's light
+          If it's the correct button
+             Play it's tone
+          Else
+             Play the LOSER tone
+    */
+    if (swval == LOW && debounce(pin, true) ) {
+      digitalWrite(LED_PINS[pin], HIGH);
+
+      if (pin == pattern[pattern_loc]) { // Correct pin?
+        tone(12, TONES[pin]);
+      }
+      else
+      {
+        tone(12, NOTE_E2);
+        delay(1000); // play fail tone for at least 1 second - full shame
+      }
     }
+
+    /*
+       If a button is released
+       Unlight it's light
+       Stop playing any tone
+       If it's the correct button
+         Add another light to the pattern
+         Play the new pattern
+       Else
+         Start a new game
+    */
+    if (swval == HIGH && debounce(pin, false) ) {
+      digitalWrite(LED_PINS[pin], LOW);
+      noTone(12);
+
+      // Did the user just finish pressing the correct button
+      if (pin == pattern[pattern_loc]) {
+
+        pattern_loc += 1;
+
+        if (pattern_loc == pattern_length) { // Pattern complete?
+          pattern_loc = 0;
+          pattern_length++;
+          pattern[pattern_length] = random(4);
+
+          if (pattern_length == 5) // if on the 5th location, speed things up
+          {
+            pattern_delay = 200;
+          }
+          
+          show_pattern();
+        }
+      } else { // User just released the wrong button
+        new_game();
+      }
+    }
+  }
 }
