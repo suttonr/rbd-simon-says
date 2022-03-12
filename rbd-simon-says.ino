@@ -7,29 +7,11 @@ uint8_t pattern_length = 4;
 uint8_t pattern_loc = 0;
 uint16_t pattern_delay = 500;
 
-void lose(uint8_t correct_led) {
-  tone(12, NOTE_D2 , 100);
-  flashled(correct_led, 100);
-  delay(100);
-  tone(12, NOTE_CS2, 100);
-  flashled(correct_led, 100);
-  delay(100);
-  tone(12, NOTE_B1 , 500);
-  flashled(correct_led, 100);
-  delay(200);
-  flashallled(1000);
-  delay(1000);
-  new_game();
-}
-
 void new_game() {
 
   pattern_length = 1;
   pattern_loc = 0;
   pattern_delay = 500;
-
-  // Need to use an unassigned analog input
-  randomSeed(analogRead( A5 ));
 
   pattern[0] = random(4);
 
@@ -47,42 +29,45 @@ void show_pattern() {
 void setup () {
   Serial.begin(9600);
 
+  // Setup the buttons and LEDs on the arduino
   for (int pin = 0; pin < pattern_length; pin++) {
     pinMode(SWITCH_PINS[pin], INPUT_PULLUP);
     pinMode(LED_PINS[pin], OUTPUT);
   }
 
+  // Need to use an unassigned analog input
+  randomSeed(analogRead( A5 ));
+
   new_game();
 }
 
-
-bool button_on = false;
+/*
+ * Main program loop. Do what's in here forever
+ */
 void loop () {
 
+  // Check the condition of all 4 buttons
   for (int pin = 0; pin < 4; pin++) {
     int swval = digitalRead(SWITCH_PINS[pin]);
 
     /*
-       If a button is pressed
+       If a button is pressed down (but not released yet)
           Light it's light
           If it's the correct button
              Play it's tone
           Else
              Play the LOSER tone
     */
-    button_on = false;
     if (swval == LOW && debounce(pin, true) ) {
       digitalWrite(LED_PINS[pin], HIGH);
 
-      // Did user hit the correct button?
-      if (pin == pattern[pattern_loc]) {
+      if (pin == pattern[pattern_loc]) { // Correct pin?
         tone(12, TONES[pin]);
       }
       else
       {
         tone(12, NOTE_E2);
-        // play fail tone for at least 1 second
-        delay(1000);
+        delay(1000); // play fail tone for at least 1 second - full shame
       }
     }
 
@@ -94,7 +79,7 @@ void loop () {
          Add another light to the pattern
          Play the new pattern
        Else
-          Nothing for now... let user keep trying
+         Start a new game
     */
     if (swval == HIGH && debounce(pin, false) ) {
       digitalWrite(LED_PINS[pin], LOW);
@@ -105,22 +90,19 @@ void loop () {
 
         pattern_loc += 1;
 
-        // Is this the last button in the pattern
-        if (pattern_loc == pattern_length) {
+        if (pattern_loc == pattern_length) { // Pattern complete?
           pattern_loc = 0;
           pattern_length++;
           pattern[pattern_length] = random(4);
 
-          // if on the 5th location, speed things up
-          if (pattern_length == 5)
+          if (pattern_length == 5) // if on the 5th location, speed things up
           {
             pattern_delay = 200;
           }
           
           show_pattern();
         }
-      } else {
-        // User just released the wrong button
+      } else { // User just released the wrong button
         new_game();
       }
     }
