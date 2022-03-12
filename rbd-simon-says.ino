@@ -1,11 +1,10 @@
 #include "rbd-simon-says-shield.h"
 
-#define MAX_PATTERN 4
+#define MAX_PATTERN 100
+uint16_t PATTERN_DELAY = 500;
 
-uint8_t PATTERN[MAX_PATTERN] = {0};
-uint8_t PATTERN_LENGTH = MAX_PATTERN;
-uint16_t PATTERN_DELAY = 1000;
-
+uint8_t pattern[MAX_PATTERN] = {0};
+uint8_t pattern_length = 4;
 uint8_t pattern_loc = 0;
 
 void lose(uint8_t correct_led){
@@ -24,58 +23,103 @@ void lose(uint8_t correct_led){
 }
 
 void win(){
-    tone(12,NOTE_D5 ,200);
-    flashallled(200);
-    delay(100);
-    tone(12,NOTE_D5,200);
-    flashallled(200);
-    tone(12,NOTE_D5 ,200);
-    flashallled(200);
-    tone(12,NOTE_A5 ,300);
-    delay(1000);
-    new_game();
+
+    pattern[pattern_length] = random(4);
+    pattern_length++;
+    pattern_loc = 0;
+    show_pattern();
 }
 
 void new_game() {
+  
+    pattern_length = 1;
     pattern_loc = 0;
+
+    // Need to use an unassigned analog input
     randomSeed(analogRead( A5 ));
-    for (int pin=0;pin<4;pin++){
-        pinMode(SWITCH_PINS[pin], INPUT_PULLUP);
-        pinMode(LED_PINS[pin], OUTPUT);
-        flashled(pin);
-        playtone(pin);
-    }
     
-    for (int i=0;i<MAX_PATTERN;i++){
-        delay(PATTERN_DELAY);
-        PATTERN[i] = random(4);
-        flashled(PATTERN[i]);
-        playtone(PATTERN[i]);
-    }
- 
+    pattern[0] = random(4);
+    
+    show_pattern();
 }
+
+void show_pattern() {
+  for (int i=0; i<pattern_length; i++){
+    delay(PATTERN_DELAY);
+    flashled(pattern[i]);
+    playtone(pattern[i]);
+  }
+}
+
 void setup () {
     Serial.begin(9600);
+
+    for (int pin=0; pin < pattern_length; pin++){
+      pinMode(SWITCH_PINS[pin], INPUT_PULLUP);
+      pinMode(LED_PINS[pin], OUTPUT);
+    }
+    
     new_game();
 }
 
+
+bool button_on = false;
 void loop () {
-    for (int pin=0;pin<4;pin++){
+    
+    for (int pin=0; pin<4; pin++){
         int swval = digitalRead(SWITCH_PINS[pin]);
-        if ( swval == LOW && debounce(pin,true) ){           
+
+        /*
+         * If a button is pressed
+         *    Light it's light
+         *    If it's the correct button
+         *       Play it's tone
+         *    Else
+         *       Play the LOSER tone
+         */
+        button_on = false;        
+        if (swval == LOW && debounce(pin,true) ){           
             digitalWrite(LED_PINS[pin], HIGH);
-            playtone(pin);
-            if ( pattern_loc == MAX_PATTERN-1 && pin == PATTERN[pattern_loc] ){
-                win();
+
+            // Did user hit the correct button?
+            if (pin == pattern[pattern_loc]) {
+              tone(12, TONES[pin]);
             }
-            else if ( pattern_loc < MAX_PATTERN && pin != PATTERN[pattern_loc] ) {
-                lose(PATTERN[pattern_loc]);
+            else
+            { 
+              tone(12, NOTE_E2);
             }
-            else if ( pattern_loc < MAX_PATTERN ) {
-                pattern_loc++;
+        }
+
+        /*
+         * If a button is released
+         * Unlight it's light
+         * Stop playing any tone
+         * If it's the correct button
+         *   Add another light to the pattern
+         *   Play the new pattern
+         * Else
+         *    Nothing for now... let user keep trying
+         */
+        if (swval == HIGH && debounce(pin,false) ){
+          digitalWrite(LED_PINS[pin], LOW);
+          noTone(12);
+
+          // Did the user just finish pressing the correct button
+          if (pin == pattern[pattern_loc]) {
+
+            pattern_loc += 1;
+            
+            // Is this the last button in the pattern
+            if (pattern_loc == pattern_length) {
+              pattern_loc = 0;
+              pattern_length++;
+              pattern[pattern_length] = random(4);
+              show_pattern();              
             }
-        } else if ( debounce(pin,false) ) {
-            digitalWrite(LED_PINS[pin], LOW);
+              
+         }
+
         }
     }
 }
