@@ -1,11 +1,11 @@
 #include "rbd-simon-says-shield.h"
 
 #define MAX_PATTERN 100
-uint16_t PATTERN_DELAY = 500;
 
 uint8_t pattern[MAX_PATTERN] = {0};
 uint8_t pattern_length = 4;
 uint8_t pattern_loc = 0;
+uint16_t pattern_delay = 500;
 
 void lose(uint8_t correct_led) {
   tone(12, NOTE_D2 , 100);
@@ -22,18 +22,11 @@ void lose(uint8_t correct_led) {
   new_game();
 }
 
-void win() {
-
-  pattern[pattern_length] = random(4);
-  pattern_length++;
-  pattern_loc = 0;
-  show_pattern();
-}
-
 void new_game() {
 
   pattern_length = 1;
   pattern_loc = 0;
+  pattern_delay = 500;
 
   // Need to use an unassigned analog input
   randomSeed(analogRead( A5 ));
@@ -45,7 +38,7 @@ void new_game() {
 
 void show_pattern() {
   for (int i = 0; i < pattern_length; i++) {
-    delay(PATTERN_DELAY);
+    delay(pattern_delay);
     flashled(pattern[i]);
     playtone(pattern[i]);
   }
@@ -117,6 +110,13 @@ void loop () {
           pattern_loc = 0;
           pattern_length++;
           pattern[pattern_length] = random(4);
+
+          // if on the 5th location, speed things up
+          if (pattern_length == 5)
+          {
+            pattern_delay = 200;
+          }
+          
           show_pattern();
         }
       } else {
