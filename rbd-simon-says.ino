@@ -6,6 +6,7 @@ uint8_t pattern[MAX_PATTERN] = {0};
 uint8_t pattern_length = 4;
 uint8_t pattern_loc = 0;
 uint16_t pattern_delay = 500;
+long first_click_time = 0;
 
 void new_game() {
 
@@ -45,9 +46,10 @@ void setup () {
  * Main program loop. Do what's in here forever
  */
 void loop () {
-
+  
   // Check the condition of all 4 buttons
   for (int pin = 0; pin < 4; pin++) {
+    
     int swval = digitalRead(SWITCH_PINS[pin]);
 
     /*
@@ -69,6 +71,7 @@ void loop () {
         tone(12, NOTE_E2);
         delay(1000); // play fail tone for at least 1 second - full shame
       }
+
     }
 
     /*
@@ -85,20 +88,25 @@ void loop () {
       digitalWrite(LED_PINS[pin], LOW);
       noTone(12);
 
+      if (pattern_loc == 0) { // First button press of pattern?
+        first_click_time = millis();
+      }
+      
       // Did the user just finish pressing the correct button
       if (pin == pattern[pattern_loc]) {
 
         pattern_loc += 1;
 
         if (pattern_loc == pattern_length) { // Pattern complete?
+
+          // Calculate speed user entered last pattern 
+          // so we play back at same speed
+          long user_clicked_time = millis() - first_click_time;
+          pattern_delay = user_clicked_time / pattern_length;
+         
           pattern_loc = 0;
           pattern_length++;
           pattern[pattern_length] = random(4);
-
-          if (pattern_length == 5) // if on the 5th location, speed things up
-          {
-            pattern_delay = 200;
-          }
           
           show_pattern();
         }
