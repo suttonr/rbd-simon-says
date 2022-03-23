@@ -1,3 +1,6 @@
+#ifndef RBD-SIMON-SAYS_h
+#define RBD-SIMON-SAYS_h
+
 #include "Arduino.h"
 #include "pitches.h"
 #include "stdint.h"
@@ -10,8 +13,11 @@ extern uint8_t LED_PINS[];
 extern int TONES[];
 extern bool buttonStates[];
 extern unsigned long buttonStateChange[];
+extern void setupshield();
 
 void flashled ( int pin, int time=200 );
 void flashallled ( int time=200 );
 void playtone( int pin, int time=200 );
 bool debounce( int pin, bool state );
+
+#endif
