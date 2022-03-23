@@ -93,5 +93,9 @@ void loop () {
         } else if ( debounce(pin,false) ) {
             digitalWrite(LED_PINS[pin], LOW);
         }
+      } else { // User just released the wrong button
+        new_game();
+      }
     }
+  }
 }
