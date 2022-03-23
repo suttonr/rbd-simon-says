@@ -1,4 +1,4 @@
-#include "rbd-simon-says.h"
+#include "rbd-simon-says-shield.h"
 
 #define MAX_PATTERN 100
 

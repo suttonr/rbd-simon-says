@@ -1,4 +1,4 @@
-#include "rbd-simon-says.h"
+#include "rbd-simon-says-shield.h"
 
 uint8_t SWITCH_PINS[] = { A0, A1, A2, A3 };
 uint8_t LED_PINS[] = { 4, 5, 6, 7 };
@@ -6,15 +6,6 @@ int TONES[] = { NOTE_E4, NOTE_CS4, NOTE_A4, NOTE_E3 };
 
 bool buttonStates[] = { false,false,false,false };
 unsigned long buttonStateChange[] = { 0,0,0,0 };
-
-void setupshield(){
-    for (int pin=0;pin<4;pin++){
-        pinMode(SWITCH_PINS[pin], INPUT_PULLUP);
-        pinMode(LED_PINS[pin], OUTPUT);
-        flashled(pin);
-        playtone(pin);
-    }
-}
 
 void flashled ( int pin, int time ) {
     if ( pin < 4 && pin >= 0 ) {
