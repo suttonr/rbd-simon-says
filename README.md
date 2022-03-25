@@ -1,5 +1,9 @@
 # rbd-simon-says
+
+<img width="200px" align="right" src="doc/img/shield-bench.jpg?raw=true" /> 
 To celebrate the 100th birthday of Ralph H. Baer we created an Arduino shield which enables learning basic electronics and coding though games.  Ralph H. Baer along with Howard J. Morrison invented the popular [Simon Game](https://en.wikipedia.org/wiki/Simon_(game)), the components on this shield allow someone to create similar style of game as well as come up with their own.
+
+<br/>
 
 This repo is a library intended to obfuscate some more advanced concepts like debouncing, setup routines, etc to promote accessability of the subject.
 
@@ -15,11 +19,14 @@ This repo is a library intended to obfuscate some more advanced concepts like de
 ![arduino-install](doc/img/arduino-install.png?raw=true)
 
 # Hardware
+<img width="200px" align="right" src="doc/img/shield.jpg?raw=true" /> 
 Simple breakout of 4 LEDs, 4 switches, and a buzzer. The library assumes things are connected as shown.
 
 * LEDs: A0,A1,A2,A3
 * Switches: 4,5,6,7
 * Buzzer: 12
+
+<br clear="right"/>
 
 ![shield schematic.png ](doc/img/shield-schematic.png?raw=true)
 
@@ -28,11 +35,13 @@ The library has a number of examples to explore the shield.  You can find these 
 
 To install an example once open select the upload button in the Arduino IDE
 
-![arduino upload button](doc/img/arduino-upload.png?raw=true)
+<img width="400px"
+     src="doc/img/arduino-upload.png?raw=true" />
 
 Once the upload is complete, there will be a message at the bottom.  If you get an error make sure your board and port ate setup in the `Tools` menu.
 
-![arduino upload button](doc/img/arduino-upload-done.png?raw=true)
+<img width="400px"
+     src="doc/img/arduino-upload-done.png?raw=true" />
 
 # Examples
 
