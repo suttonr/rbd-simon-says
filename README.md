@@ -1,7 +1,6 @@
 # rbd-simon-says
 
-<img width="200px" align="right" src="doc/img/shield-bench.jpg?raw=true" /> 
-To celebrate the 100th birthday of Ralph H. Baer we created an Arduino shield which enables learning basic electronics and coding though games.  Ralph H. Baer along with Howard J. Morrison invented the popular [Simon Game](https://en.wikipedia.org/wiki/Simon_(game)), the components on this shield allow someone to create similar style of game as well as come up with their own.
+<img width="200px" align="right" src="doc/img/shield-bench.jpg?raw=true" /> To celebrate the 100th birthday of Ralph H. Baer we created an Arduino shield which enables learning basic electronics and coding though games.  Ralph H. Baer along with Howard J. Morrison invented the popular [Simon Game](https://en.wikipedia.org/wiki/Simon_(game)), the components on this shield allow someone to create similar style of game as well as come up with their own.
 
 <br/>
 
