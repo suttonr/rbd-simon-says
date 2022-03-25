@@ -82,7 +82,7 @@ void loop () {
         if ( swval == LOW && debounce(pin,true) ){           
             digitalWrite(LED_PINS[pin], HIGH);
             playtone(pin);
-            if ( pattern_loc == PATTERN_LENGTH -1 && pin == PATTERN[pattern_loc] ){
+            if ( pattern_loc == PATTERN_LENGTH-1 && pin == PATTERN[pattern_loc] ){
                 win();
             } else if ( pattern_loc < PATTERN_LENGTH && pin != PATTERN[pattern_loc] ) {
                 lose(PATTERN[pattern_loc]);
