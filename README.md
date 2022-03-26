@@ -10,7 +10,7 @@ This repo is a library intended to obfuscate some more advanced concepts like de
 
 # Installation
 * If you do not have the Arduino IDE installed, follow instructions here to install it. https://www.arduino.cc/en/software
-* [Download](https://github.com/suttonr/rbd-simon-says/archive/refs/heads/main.zip) the zip file of this repo.
+* [Download rbdWorkshop.zip](https://github.com/suttonr/rbd-simon-says/raw/main/rbdWorkshop.zip) from this repo.
 
 ![download screen shot](doc/img/gh-download.png?raw=true)
 
@@ -44,21 +44,21 @@ Once the upload is complete, there will be a message at the bottom.  If you get 
 
 # Examples
 
-## 01-HelloWorld
+## AHelloWorld
 Examples which chases lights around the board
 ### Things to try
 * Can you make the lights go faster?
 * Can you make the lights go in the reverse direction?
 * Can you make all the lights flash at the same time?
 
-## 02-ShieldIntro
+## BShieldIntro
 This example lights up the corresponding light and plays a note when a switch is pressed.
 ### Things to try
 * Can you make the tone only play when the red switch is pressed?
 * Can you make the light next to the pressed key light?
 * (Advanced) Can you play a song instead of a single note?
 
-## 03-LetsPlay
+## CLetsPlay
 Here we start to play a game resembling simon says.  After the initiation, a two light pattern will show. If the pattern is successfully entered an additional light will be added.  This continues until the incorrect pattern is entered.
 
 ### Things to try
