@@ -1,5 +1,5 @@
-#ifndef RBD-SIMON-SAYS_h
-#define RBD-SIMON-SAYS_h
+#ifndef RBD_SIMON_SAYS_h
+#define RBD_SIMON_SAYS_h
 
 #include "Arduino.h"
 #include "pitches.h"
