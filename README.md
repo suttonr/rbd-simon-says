@@ -17,7 +17,7 @@ This repo is a library intended to obfuscate some more advanced concepts like de
 <br clear="right"/>
 
 ## [Option 1] Arduino Cloud ( Required for Chromebooks )
-Arduino Cloud is the best option for Chromebooks and is a quick way to get started on computer which has the chrome browser. Start with your Arduino *NOT* plugged in. If you perfer to install the traditional Arduino IDE proceed to the next section.
+Arduino Cloud is the best option for Chromebooks and is a quick way to get started on computer which has the chrome browser. Start with your Arduino *NOT* plugged in. If you prefer to install the traditional Arduino IDE proceed to the next section.
 * Goto https://create.arduino.cc/editor in Chrome ( other browsers will not work properly )
 * Create or link an account
 * <img width="400px" align="right" src="doc/img/arduino-helper-install.png?raw=true" /><span clear="right"/> The first time you will be prompted to install a plugin which allows the page to access the USB port the Arduino board will be pluged into. Click 'Install' and follow installation specific to your OS.   For Chromebooks you will be taken to install a chrome extension.
@@ -28,7 +28,7 @@ Arduino Cloud is the best option for Chromebooks and is a quick way to get start
 * <img width="400px" align="right" src="doc/img/arduino-cloud-lib-install.png?raw=true" /> Install the library by 
   * Select Library
   * Click Import 
-  * Select the [rbdWorkshop.zip](https://github.com/suttonr/rbd-simon-says/raw/main/rbdWorkshop.zip) file you downloaded eariler <br clear="right"/>
+  * Select the [rbdWorkshop.zip](https://github.com/suttonr/rbd-simon-says/archive/refs/heads/main.zip) file you downloaded earlier <br clear="right"/>
 
 ## [Option 2] Install Arduino to your computer
 ( If you already setup Arduino Cloud you can skip this )
@@ -66,7 +66,7 @@ Once the upload is complete, there will be a message at the bottom.  If you get 
 
 ---
 # Arduino Basics
-Bellow is an small example program. Arduino programs are made up of at least two sections, a setup function and a loop function. This program also has a reference to a library for the shield we are using.
+Bellow is a small example program. Arduino programs are made up of at least two sections, a setup function and a loop function. This program also has a reference to a library for the shield we are using.
 
 ```
 #include "rbd-simon-says.h"
@@ -115,7 +115,7 @@ void loop () {
 }
 ```
 The loop function continually runs while the board is powered on.  Statements in the loop function execute from top to bottom, once the last statement is run it restarts from the top.  In this example we are again using the `digitalWrite` command, this time we set the first LED to a high voltage.  We then wait for 1 second and then turn the light back off.  This will continue to repeat blinking the first LED.   
-> **Time**: You may notice that to wait for 1 second we used the command `delay(1000)`. The Arduino board runs about 16 million commands every second, there are many times when programs need to pause for very short periods of time.   For this reason the `delay` command user milliseconds what are 1000 times smaller then a second so to wait for a second we need to wait for 1000 milliseconds. 
+> **Time**: You may notice that to wait for 1 second we used the command `delay(1000)`. The Arduino board runs about 16 million commands every second, there are many times when programs need to pause for very short periods of time.   For this reason the `delay` command user milliseconds what are 1000 times smaller than a second so to wait for a second we need to wait for 1000 milliseconds. 
 
 # Examples
 
