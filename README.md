@@ -11,7 +11,7 @@ This repo is a library intended to obfuscate some more advanced concepts like de
 ---
 # Installation
 
-* [Download rbdWorkshop.zip](https://github.com/suttonr/rbd-simon-says/raw/main/rbdWorkshop.zip) from this repo.
+* [Download rbdWorkshop.zip](https://github.com/suttonr/rbd-simon-says/archive/refs/heads/main.zip) from this repo.
 
 <img width="300px" align="right" src="doc/img/gh-download.png?raw=true" /> 
 <br clear="right"/>
